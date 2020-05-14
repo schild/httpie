@@ -70,7 +70,7 @@ class Environment(object):
             if is_windows:
                 # noinspection PyUnresolvedReferences
                 from colorama import AnsiToWin32
-                if isinstance(self.stdout, AnsiToWin32):
+                if isinstance(actual_stdout, AnsiToWin32):
                     actual_stdout = self.stdout.wrapped
             self.stdout_encoding = getattr(
                 actual_stdout, 'encoding', None) or 'utf8'
@@ -90,11 +90,8 @@ class Environment(object):
         actual = dict(defaults)
         actual.update(self.__dict__)
         actual['config'] = self.config
-        return repr_dict_nice(dict(
-            (key, value)
-            for key, value in actual.items()
-            if not key.startswith('_'))
-        )
+        return repr_dict_nice({key: value for key, value in actual.items()
+                if not key.startswith('_')})
 
     def __repr__(self):
         return '<{0} {1}>'.format(type(self).__name__, str(self))

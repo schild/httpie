@@ -100,7 +100,7 @@ def get_stream_type(env, args):
     we don't need to think what stream we are dealing with.
 
     """
-    if not env.stdout_isatty and not args.prettify:
+    if not (env.stdout_isatty or args.prettify):
         Stream = partial(
             RawStream,
             chunk_size=RawStream.CHUNK_SIZE_BY_LINE
@@ -241,6 +241,7 @@ class PrettyStream(EncodedStream):
     def iter_body(self):
         first_chunk = True
         iter_lines = self.msg.iter_lines(self.CHUNK_SIZE)
+        first_chunk = False
         for line, lf in iter_lines:
             if b'\0' in line:
                 if first_chunk:
@@ -257,7 +258,6 @@ class PrettyStream(EncodedStream):
                         return
                 raise BinarySuppressedError()
             yield self.process_body(line) + lf
-            first_chunk = False
 
     def process_body(self, chunk):
         if not isinstance(chunk, str):

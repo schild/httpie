@@ -137,15 +137,14 @@ class Session(BaseConfigDict):
         stored_attrs = ['value', 'path', 'secure', 'expires']
         self['cookies'] = {}
         for cookie in jar:
-            self['cookies'][cookie.name] = dict(
-                (attname, getattr(cookie, attname))
-                for attname in stored_attrs
-            )
+            self['cookies'][cookie.name] = {
+                attname: getattr(cookie, attname) for attname in stored_attrs
+            }
 
     @property
     def auth(self):
         auth = self.get('auth', None)
-        if not auth or not auth['type']:
+        if not (auth and auth['type']):
             return
         auth_plugin = plugin_manager.get_auth_plugin(auth['type'])()
         return auth_plugin.get_auth(auth['username'], auth['password'])

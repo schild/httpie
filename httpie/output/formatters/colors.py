@@ -51,10 +51,7 @@ class ColorFormatter(FormatterPlugin):
         except ClassNotFound:
             style_class = Solarized256Style
 
-        if env.colors == 256:
-            fmt_class = Terminal256Formatter
-        else:
-            fmt_class = TerminalFormatter
+        fmt_class = Terminal256Formatter if env.colors == 256 else TerminalFormatter
         self.formatter = fmt_class(style=style_class)
 
     def format_headers(self, headers):

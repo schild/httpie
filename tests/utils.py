@@ -24,8 +24,7 @@ HTTP_OK_COLOR = (
 
 
 def mk_config_dir():
-    dirname = tempfile.mkdtemp(prefix='httpie_config_')
-    return dirname
+    return tempfile.mkdtemp(prefix='httpie_config_')
 
 
 def add_auth(url, auth):

@@ -2,6 +2,7 @@
 HTTPie - a CLI, cURL-like tool for humans.
 
 """
+
 __author__ = 'Jakub Roztocil'
 __version__ = '0.9.6'
 __licence__ = 'BSD'
@@ -20,8 +21,5 @@ class ExitStatus:
     ERROR_HTTP_5XX = 5
 
 
-EXIT_STATUS_LABELS = dict(
-    (value, key)
-    for key, value in ExitStatus.__dict__.items()
-    if key.isupper()
-)
+EXIT_STATUS_LABELS = {value: key for key, value in ExitStatus.__dict__.items()
+    if key.isupper()}

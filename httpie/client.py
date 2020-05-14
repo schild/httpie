@@ -112,7 +112,7 @@ def get_default_headers(args):
     auto_json = args.data and not args.form
     if args.json or auto_json:
         default_headers['Accept'] = JSON_ACCEPT
-        if args.json or (auto_json and args.data):
+        if args.json or args.data:
             default_headers['Content-Type'] = JSON_CONTENT_TYPE
 
     elif args.form and not args.files:

@@ -1,6 +1,7 @@
 """Parsing and processing of CLI input (args, auth credentials, files, stdin).
 
 """
+
 import os
 import ssl
 import sys
@@ -111,11 +112,11 @@ SSL_VERSION_ARG_MAPPING = {
     'tls1.1': 'PROTOCOL_TLSv1_1',
     'tls1.2': 'PROTOCOL_TLSv1_2',
 }
-SSL_VERSION_ARG_MAPPING = dict(
-    (cli_arg, getattr(ssl, ssl_constant))
+SSL_VERSION_ARG_MAPPING = {
+    cli_arg: getattr(ssl, ssl_constant)
     for cli_arg, ssl_constant in SSL_VERSION_ARG_MAPPING.items()
     if hasattr(ssl, ssl_constant)
-)
+}
 
 
 class HTTPieArgumentParser(ArgumentParser):
@@ -148,7 +149,7 @@ class HTTPieArgumentParser(ArgumentParser):
         self._process_pretty_options()
         self._guess_method()
         self._parse_items()
-        if not self.args.ignore_stdin and not env.stdin_isatty:
+        if not (self.args.ignore_stdin or env.stdin_isatty):
             self._body_from_file(self.env.stdin)
         if not URL_SCHEME_RE.match(self.args.url):
             scheme = self.args.default_scheme + "://"
@@ -405,9 +406,8 @@ class HTTPieArgumentParser(ArgumentParser):
             self.args.prettify = PRETTY_MAP[self.args.prettify]
 
     def _validate_download_options(self):
-        if not self.args.download:
-            if self.args.download_resume:
-                self.error('--continue only works with --download')
+        if not self.args.download and self.args.download_resume:
+            self.error('--continue only works with --download')
         if self.args.download_resume and not (
                 self.args.download and self.args.output_file):
             self.error('--continue requires --output to be specified')

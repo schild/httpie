@@ -84,9 +84,10 @@ def parse_content_range(content_range, resumed_from):
         raise ContentRangeError(
             'Invalid Content-Range returned: %r' % content_range)
 
-    if (first_byte_pos != resumed_from or
-            (instance_length is not None and
-             last_byte_pos + 1 != instance_length)):
+    if not (
+        first_byte_pos == resumed_from
+        and (instance_length is None or last_byte_pos + 1 == instance_length)
+    ):
         # Not what we asked for.
         raise ContentRangeError(
             'Unexpected Content-Range returned (%r)'
@@ -112,8 +113,8 @@ def filename_from_content_disposition(content_disposition):
     if filename:
         # Basic sanitation.
         filename = os.path.basename(filename).lstrip('.').strip()
-        if filename:
-            return filename
+    if filename:
+        return filename
 
 
 def filename_from_url(url, content_type):

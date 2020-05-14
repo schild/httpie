@@ -168,10 +168,7 @@ except ImportError:  # pragma: no cover
             if isinstance(other, OrderedDict):
                 if len(self) != len(other):
                     return False
-                for p, q in zip(self.items(), other.items()):
-                    if p != q:
-                        return False
-                return True
+                return all(p == q for p, q in zip(self.items(), other.items()))
             return dict.__eq__(self, other)
 
         def __ne__(self, other):
